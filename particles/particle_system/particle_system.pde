@@ -2,29 +2,42 @@ import java.util.*;
 
 int total = 10;
 
-ArrayList<Particle> plist = new ArrayList<Particle>();
+ParticleSystem ps;
 
 void setup() {
   size(600, 600);
-  for (int i = 0; i < total; i++) {
-    PVector location = new PVector(width/2, height/2);
-    plist.add(new Particle(location));
-  }
+
+  ps = new ParticleSystem();
 }
 
 void draw() {
   background(0);
+  ps.run();
+}
 
-  PVector location = new PVector(width/2, height/2);
-  plist.add(new Particle(location));
-  Iterator<Particle> it = plist.iterator();
+class ParticleSystem {
+  ArrayList<Particle> particles;
 
-  while(it.hasNext()){
-    Particle p = it.next();
-    p.run();
+  ParticleSystem() {
+    particles = new ArrayList<Particle>();
+  }
 
-    if (p.isDead()) {
-      it.remove();
+  void add() {
+    particles.add(new Particle(new PVector(width/2, height/2)));
+  }
+
+  void run() {
+    PVector location = new PVector(width/2, height/2);
+    particles.add(new Particle(location));
+    Iterator<Particle> it = particles.iterator();
+
+    while(it.hasNext()){
+      Particle p = it.next();
+      p.run();
+
+      if (p.isDead()) {
+        it.remove();
+      }
     }
   }
 }
