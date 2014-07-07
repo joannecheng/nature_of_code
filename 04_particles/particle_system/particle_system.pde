@@ -12,6 +12,9 @@ void setup() {
 }
 
 void draw() {
+  PVector l = new PVector(mouseX, mouseY);
+  ps.setOrigin(l);
+
   background(0);
   ps.run();
 }
@@ -27,6 +30,10 @@ class ParticleSystem {
 
   void add() {
     particles.add(new Particle(origin));
+  }
+
+  void setOrigin(PVector o) {
+    origin = o.get();
   }
 
   void run() {
