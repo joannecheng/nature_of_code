@@ -6,8 +6,9 @@ ParticleSystem ps;
 
 void setup() {
   size(600, 600);
+  PVector origin = new PVector(width/2, height/2);
 
-  ps = new ParticleSystem();
+  ps = new ParticleSystem(origin);
 }
 
 void draw() {
@@ -17,18 +18,19 @@ void draw() {
 
 class ParticleSystem {
   ArrayList<Particle> particles;
+  PVector origin;
 
-  ParticleSystem() {
+  ParticleSystem(PVector location) {
     particles = new ArrayList<Particle>();
+    origin = location.get();
   }
 
   void add() {
-    particles.add(new Particle(new PVector(width/2, height/2)));
+    particles.add(new Particle(origin));
   }
 
   void run() {
-    PVector location = new PVector(width/2, height/2);
-    particles.add(new Particle(location));
+    particles.add(new Particle(origin));
     Iterator<Particle> it = particles.iterator();
 
     while(it.hasNext()){
@@ -49,7 +51,7 @@ class Particle {
   float lifespan = 255.0;
 
   Particle(PVector l) {
-    location = l;
+    location = l.get();
     velocity = new PVector(random(-1, 1), random(-2, 0));
     acceleration = new PVector(0, 0.05);
   }
