@@ -61,7 +61,6 @@ class Particle {
     zPos = random(-10, 10);
     velocity = new PVector(random(-1, 1), random(-2, 0));
     acceleration = new PVector(0, 0.05);
-    rotateY(radians(90));
   }
 
   void run() {
@@ -81,6 +80,7 @@ class Particle {
     pushMatrix();
     translate(location.x,location.y, zPos);
     fill(255,lifespan);
+    sphereDetail(10);
     sphere(8);
     popMatrix();
   }
