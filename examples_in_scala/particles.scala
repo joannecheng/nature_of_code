@@ -18,29 +18,58 @@ object BasicParticles extends PApplet {
 class BasicParticles extends PApplet {
   // Processing sketch code goes here!
 
-  var particle = new Particle(new PVector(250, 100))
+  val particleSystem = new ParticleSystem(new PVector(250, 100))
 
   override def setup() = {
     size(500, 500)
     background(3)
     smooth()
+
   }
 
   override def draw() = {
     background(3)
-    particle.run()
+    particleSystem.run()
+  }
 
-    if (particle.isDead()) {
-      particle = new Particle(new PVector(250, 100))
+  override def mousePressed() = {
+    particleSystem.updateOrigin(new PVector(mouseX, mouseY))
+  }
+
+  class ParticleSystem(loc: PVector) {
+    var origin = loc.get;
+    val particles = scala.collection.mutable.ListBuffer.empty[Particle]
+
+    def run() = {
+      particles += new Particle(origin)
+
+      val it = particles.iterator
+
+      while(it.hasNext) {
+        var p = it.next
+        p.run
+        removeIfDead(p)
+      }
+    }
+
+    def removeIfDead(p: Particle) = {
+      val index = particles.indexOf(p)
+      if (p.isDead) { particles.remove(index) }
+    }
+
+    def updateOrigin(loc: PVector) {
+      origin = loc;
     }
   }
 
   class Particle(loc: PVector) {
-    var l: PVector = loc
+    var l: PVector = loc.get
     var lifespan = 200
     var strokeColor = color(250, 100, 140)
 
     val particleSize = 10
+    val velocity = new PVector(random(-1, 1), random(-2, 0))
+    val acceleration = new PVector(0, 0.05.toFloat);
 
     def run() = {
       update()
@@ -48,6 +77,8 @@ class BasicParticles extends PApplet {
     }
 
     def update() {
+      velocity.add(acceleration)
+      l.add(velocity)
       lifespan -= 1
     }
 
@@ -56,13 +87,11 @@ class BasicParticles extends PApplet {
       ellipse(l.x, l.y, particleSize, particleSize)
     }
 
-    def isDead() = {
-      lifespan < 0
-    }
+    def isDead() = lifespan < 0
   }
+
 }
 
 BasicParticles.main()
 
 //other classes
-
